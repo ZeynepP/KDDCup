@@ -9,7 +9,7 @@ from ogb.utils.url import decide_download, download_url, extract_zip
 import pandas as pd
 from tqdm import tqdm
 import torch
-#os.system("taskset -p 0xff %d" % os.getpid())
+# os.system("taskset -p 0xff %d" % os.getpid())
 from torch_geometric.data import InMemoryDataset, dataloader, Batch
 from torch_geometric.data import Data
 import copy
@@ -17,10 +17,9 @@ from itertools import repeat, product
 from utils.utils_mol import smiles2graph, smiles2subgraphs, get_global_features
 
 
-class SubGraphsPCQM4MDataset():
+class SubGraphsPCQM4MDataset(InMemoryDataset):
 
-
-    def __init__(self, root='dataset', smiles2subgraphs=smiles2subgraphs,  transform=None, pre_transform=None):
+    def __init__(self, root='dataset', smiles2subgraphs=smiles2subgraphs, transform=None, pre_transform=None):
         '''
             Pytorch Geometric PCQM4M dataset object
                 - root (str): the dataset folder will be located at root/pcqm4m_kddcup2021
@@ -30,15 +29,14 @@ class SubGraphsPCQM4MDataset():
 
         self.smiles2subgraphs = smiles2subgraphs
 
-        self.extra =root
+        self.extra = root
 
-
-     #   super(SubGraphsPCQM4MDataset, self).__init__(self.folder, transform, pre_transform)
+        #   super(SubGraphsPCQM4MDataset, self).__init__(self.folder, transform, pre_transform)
         print("Loading sub graphs")
 
         self.batches = {}
 
-        for i in tqdm(range(100000)):#3803453
+        for i in tqdm(range(3803453)):  # 3803453
             d = self.read_subgraphs(i)
             self.batches.update(d)
         # data_list = self.load_subgraphs()
@@ -47,12 +45,12 @@ class SubGraphsPCQM4MDataset():
         #     self.batches.update(d)
         # print(len(self.batches))
 
-# getting too many files open error
+    # getting too many files open error
     # I increased ulimit but again
     def load_subgraphs(self):
         poolp = mp.pool.Pool(processes=10)
         print('Loading sub batches from files...')
-        data_list = list(tqdm(poolp.imap_unordered(self.read_subgraphs, range(3803453)))) #
+        data_list = list(tqdm(poolp.imap_unordered(self.read_subgraphs, range(3803453))))  #
         poolp.close()
         poolp.join()
 
@@ -62,14 +60,14 @@ class SubGraphsPCQM4MDataset():
 
         try:
             with open(osp.join(self.extra, 'geometric_data_processed_data_{}.pt'.format(idx)), 'rb') as f:
-                    buffer = io.BytesIO(f.read())
-                    sub = torch.load(buffer)
+                buffer = io.BytesIO(f.read())
+                sub = torch.load(buffer)
 
-            #sub = torch.load(osp.join(self.extra, 'geometric_data_processed_data_{}.pt'.format(idx)))
+            # sub = torch.load(osp.join(self.extra, 'geometric_data_processed_data_{}.pt'.format(idx))) too many open files
         except Exception as ex:
             sub = []
-        return {idx:sub}
 
+        return {idx: sub}
 
     def get_data(self, graph):
         data = Data()
@@ -81,18 +79,17 @@ class SubGraphsPCQM4MDataset():
             data.smiles = str(graph["smiles"])  # to check
         return data
 
-    def get_data_subgraph(self,i, smiles):
+    def get_data_subgraph(self, i, smiles):
 
         subgraphs = self.smiles2subgraphs(smiles)
-        if len(subgraphs)>1:
+        if len(subgraphs) > 1:
             data_list = []
             for sub in subgraphs:
                 data_list.append(self.get_data(sub))
 
             # print('Saving...', self.processed_paths[0] + 'data_{}.pt'.format(i))
-            torch.save(Batch.from_data_list(data_list),osp.join(self.extra, 'geometric_data_processed_data_{}.pt'.format(i)))
-
-
+            torch.save(Batch.from_data_list(data_list),
+                       osp.join(self.extra, 'geometric_data_processed_data_{}.pt'.format(i)))
 
     # def process(self):
     #     data_df = pd.read_csv(osp.join(self.raw_dir, 'data.csv.gz'))
@@ -107,7 +104,6 @@ class SubGraphsPCQM4MDataset():
     #
 
 
-
 if __name__ == '__main__':
     dataset = SubGraphsPCQM4MDataset(root="/usr/src/kdd/data_test6/")
     print(dataset)
@@ -117,4 +113,3 @@ if __name__ == '__main__':
     print(dataset[50])
     print(dataset[50].y)
     print(dataset.get_idx_split())
-
