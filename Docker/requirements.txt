@@ -1,0 +1,13 @@
+torch-scatter==2.0.*
+torch-sparse==0.6.*
+torch-spline-conv==1.2.*
+torch-cluster==1.5.*
+torch-geometric==1.4.*
+ogb
+# make sure the following are re-compiled if environment is re-built
+--no-binary=torch-scatter
+--no-binary=torch-sparse
+--no-binary=torch-spline-conv
+--no-binary=torch-cluster
+--no-binary=torch-geometric
+

@@ -1,0 +1,60 @@
+FROM continuumio/miniconda3
+
+ENV http_proxy="http://firewall.ina.fr:81" https_proxy="http://firewall.ina.fr:81" no_proxy="localhost,127.0.0.1,localaddress,.ina.fr,priv.ina"
+
+ENV PYTHONPATH=.
+
+# Set working directory
+WORKDIR /usr/src/app
+COPY environment.yml .
+RUN conda create -c rdkit -n myenv rdkit
+RUN conda install pytorch==1.7.0 cudatoolkit=10.1 -n myenv -c pytorch
+
+#RUN conda env create -f environment.yml
+RUN echo "source activate myenv" > ~/.bashrc
+ENV PATH /opt/conda/envs/myenv/bin:$PATH
+# Make RUN commands use the new environment:
+SHELL ["conda", "run", "-n", "myenv", "/bin/bash", "-c"]
+
+RUN python -c "import torch; print(torch.__version__)"
+RUN python -c "import torch; print(torch.version.cuda)"
+
+
+RUN pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-1.7.0+cu101.html
+RUN pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-1.7.0+cu101.html
+RUN pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-1.7.0+cu101.html
+RUN pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-1.7.0+cu101.html
+
+
+RUN python -c "import torch; print(torch.__version__)"
+RUN python -c "import torch; print(torch.version.cuda)"
+
+RUN pip install torch-geometric
+RUN pip install tensorboard
+RUN pip install SmilesPE
+RUN pip install -U ogb
+RUN pip install pathos
+# COPY ogb .
+# RUN cd ./ogb
+# RUN pip install -e .
+# RUN cd ..
+
+#
+#
+RUN echo "Make sure ogb is installed:"
+RUN python -c "from ogb.lsc import PCQM4MDataset"
+RUN python -c "import torch; print(torch.__version__)"
+RUN python -c "import torch; print(torch.version.cuda)"
+
+
+RUN cat /etc/resolv.conf
+
+# Copy application source
+COPY ./main.py /usr/src/app
+
+EXPOSE 8000
+
+ENTRYPOINT ["python"]
+CMD [ "main.py", "/usr/src/kdd/config.json" ]
+#ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "myenv", "python", "main.py", "config.json" ]
+

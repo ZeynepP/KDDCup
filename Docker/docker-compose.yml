@@ -1,0 +1,20 @@
+version: '2.0'
+networks:
+  default:
+    external:
+      name: otm
+
+services:
+  zpehlivan-temp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      #network: host
+    image: "docker-ina.rech.ina.fr/zpehlivan/runlike"
+
+    dns :
+       - 10.1.252.115
+    environment:
+      PYTHONPATH: "."
+
+    restart: always
