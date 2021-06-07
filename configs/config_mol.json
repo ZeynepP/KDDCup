@@ -1,0 +1,6 @@
+{
+  "params":  "--data_dir /usr/src/kdd/data_test6/ --drop_ratio 0.1 --num_layers 3 --num_workers 32 --epochs 1000 --batch_size 516 --device 1 --gnn gin-virtual --log_dir /usr/src/kdd/log_mol6/ --checkpoint_dir /usr/src/kdd/checkpoint_mol6/ --emb_dim 300 ",
+  "script": "/usr/src/kdd/examples/WorkingMol/main_sub.py",
+  "logging": "/usr/src/kdd/logging.ini"
+
+}

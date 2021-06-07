@@ -1,0 +1,6 @@
+{
+  "params":  "--data_dir /usr/src/kdd/data_test6/ --drop_ratio 0.2 --num_layers 3 --num_workers 48 --epochs 500 --emb_dim=600 --batch_size 512 --device 7 --gnn gin-virtual --log_dir /usr/src/kdd/log_sub6/ --checkpoint_dir /usr/src/kdd/checkpoint_gin_sub/",
+  "script": "/usr/src/kdd/examples/Pan/main_triplet.py",
+  "logging": "/usr/src/kdd/logging.ini"
+
+}

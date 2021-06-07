@@ -1,0 +1,6 @@
+{
+  "params":  "--data_dir /usr/src/kdd/data_test6/ --drop_ratio 0 --num_layers 4 --num_workers 48 --epochs 500 --emb_dim=300 --batch_size 512 --device 7 --gnn gin --log_dir /usr/src/kdd/log_dict/ --checkpoint_dir /usr/src/kdd/checkpoint_dict/",
+  "script": "/usr/src/kdd/examples/Pan/main_sub.py",
+  "logging": "/usr/src/kdd/logging.ini"
+
+}

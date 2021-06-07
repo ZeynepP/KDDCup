@@ -1,0 +1,6 @@
+{
+  "params":  "--data_dir /usr/src/kdd/data_test6/ --drop_ratio 0 --num_layers 5 --num_workers 48  --emb_dim=600 --batch_size 1024 --device 5 --gnn gin --checkpoint_dir /usr/src/kdd/checkpoint_sub3/ --save_test_dir /usr/src/kdd/test_sub3/",
+  "script": "/usr/src/kdd/examples/Pan/test_inference_SUB.py",
+  "logging": "/usr/src/kdd/logging.ini"
+
+}

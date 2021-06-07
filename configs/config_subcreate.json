@@ -1,0 +1,7 @@
+{ 
+"params":  "--data_dir /usr/src/kdd/data_sub/ --drop_ratio 0.1 --num_layers 3 --num_workers 8 --epochs 100 --batch_size 128 --device 0 --gnn gin-virtual",
+  "script": "/usr/src/kdd/examples/WorkingSub/utils/sub_dataset.py",
+  "logging": "/usr/src/kdd/logging.ini"
+
+}
+
